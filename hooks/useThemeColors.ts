@@ -5,12 +5,13 @@ import { useMemo } from 'react';
 import { themes, type ThemeName } from '@/lib/theme/themes';
 
 export function useThemeColors() {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   
   const colors = useMemo(() => {
-    const currentTheme = themes[theme as ThemeName] || themes.light;
-    return currentTheme.colors;
-  }, [theme]);
+    // resolvedTheme is undefined during SSR, use light as safe default
+    const themeName = (resolvedTheme as ThemeName) || 'light';
+    return themes[themeName].colors;
+  }, [resolvedTheme]);
 
   return colors;
 }

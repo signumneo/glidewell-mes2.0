@@ -26,6 +26,45 @@ export class AuthService {
   }
 
   /**
+   * Handle redirect response after Azure login
+   * Call this on app initialization to handle return from Microsoft login
+   */
+  static async handleRedirectResponse(): Promise<AuthResponse | null> {
+    try {
+      const msalInstance = await this.getMsalInstance();
+      const response = await msalInstance.handleRedirectPromise();
+      
+      if (response) {
+        // User just logged in via redirect
+        return this.handleAzureLoginSuccess(response);
+      }
+      
+      // No redirect response, check if user is already logged in
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length > 0) {
+        try {
+          const tokenResponse = await msalInstance.acquireTokenSilent({
+            ...loginRequest,
+            account: accounts[0],
+          });
+          return this.handleAzureLoginSuccess(tokenResponse);
+        } catch (error) {
+          // Silent token acquisition failed
+          console.log('Silent token acquisition failed');
+        }
+      }
+      
+      return null; // No user logged in
+    } catch (error: any) {
+      console.error('Error handling redirect:', error);
+      return {
+        success: false,
+        message: error.message || 'Failed to handle redirect',
+      };
+    }
+  }
+
+  /**
    * Azure SSO Login
    */
   static async loginWithAzure(): Promise<AuthResponse> {
@@ -47,9 +86,14 @@ export class AuthService {
         }
       }
 
-      // Show popup for login
-      const response = await msalInstance.loginPopup(loginRequest);
-      return this.handleAzureLoginSuccess(response);
+      // Use redirect instead of popup for full-page authentication
+      await msalInstance.loginRedirect(loginRequest);
+      // loginRedirect doesn't return - the page will redirect
+      // The callback will be handled on return to the app
+      return {
+        success: true,
+        message: 'Redirecting to Microsoft login...',
+      };
     } catch (error: any) {
       console.error('Azure SSO login error:', error);
       return {
@@ -91,18 +135,100 @@ export class AuthService {
   }
 
   /**
-   * Cognito Login (placeholder - to be implemented)
+   * MES Backend Login (via User API)
+   * Two-step authentication:
+   * 1. Authenticate with Cognito using fixed credentials
+   * 2. Validate user-entered credentials via User API
    */
-  static async loginWithCognito(credentials: LoginCredentials): Promise<AuthResponse> {
-    // TODO: Implement Cognito authentication
-    // This is a placeholder for future Cognito integration
-    
-    await new Promise(resolve => setTimeout(resolve, 800));
+  static async loginWithMESBackend(credentials: LoginCredentials): Promise<AuthResponse> {
+    try {
+      // Use Next.js API route to handle two-step authentication
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: credentials.username,
+          password: credentials.password,
+        }),
+      });
 
-    return {
-      success: false,
-      message: 'Cognito authentication not yet implemented',
-    };
+      const data = await response.json();
+      console.log('Login response:', { status: response.status, data: { ...data, token: data.token ? '***' : undefined } });
+
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      }
+
+      // Check for error in response
+      if (data.error || !data.useremail) {
+        return {
+          success: false,
+          message: data.error || 'Invalid credentials',
+        };
+      }
+
+      // Map accesslevel to role
+      const role = this.mapAccessLevelToRole(data.accesslevel);
+
+      const user: User = {
+        id: data.useremail,
+        username: data.useremail,
+        email: data.useremail,
+        name: data.useremail.split('@')[0],
+        role,
+        authMethod: 'basic',
+      };
+
+      // Use Cognito token from backend
+      const token = data.token || btoa(`${credentials.username}:${Date.now()}`);
+
+      // Store in localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(this.TOKEN_KEY, token);
+        localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+        localStorage.setItem(this.AUTH_METHOD_KEY, 'basic');
+      }
+
+      return {
+        success: true,
+        user,
+        token,
+      };
+    } catch (error: any) {
+      console.error('MES Backend login error:', error);
+      
+      // Provide more specific error messages
+      let errorMessage = 'Login failed';
+      
+      if (error.message?.includes('Failed to fetch')) {
+        errorMessage = 'Cannot connect to server. Please check your network connection.';
+      } else if (error.message?.includes('User not found') || error.message?.includes('invalid password')) {
+        errorMessage = 'Invalid email or password';
+      } else if (error.message?.includes('Cognito')) {
+        errorMessage = 'Service authentication error. Please contact support.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      return {
+        success: false,
+        message: errorMessage,
+      };
+    }
+  }
+
+  /**
+   * Map access level from API to user role
+   */
+  private static mapAccessLevelToRole(accessLevel: string): User['role'] {
+    const level = parseInt(accessLevel, 10);
+    
+    if (level >= 90) return 'admin';
+    if (level >= 50) return 'manager';
+    if (level >= 20) return 'operator';
+    return 'viewer';
   }
 
   /**
@@ -153,10 +279,10 @@ export class AuthService {
       case 'azure':
         return this.loginWithAzure();
       case 'cognito':
-        return this.loginWithCognito(credentials);
       case 'basic':
       default:
-        return this.loginWithCredentials(credentials);
+        // Use MES Backend User API for username/password authentication
+        return this.loginWithMESBackend(credentials);
     }
   }
 

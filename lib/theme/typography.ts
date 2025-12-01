@@ -33,14 +33,19 @@ export const typography = {
 
   // Common text combinations
   styles: {
-    pageTitle: 'text-3xl font-bold text-gray-900',
-    pageSubtitle: 'text-gray-600',
-    cardTitle: 'text-lg font-semibold',
-    cardValue: 'text-3xl font-bold text-gray-900',
-    label: 'text-sm font-medium',
-    body: 'text-sm text-gray-600',
-    caption: 'text-xs text-gray-500',
+    pageTitle: 'text-3xl font-bold text-gray-900 dark:text-white',
+    pageSubtitle: 'text-gray-600 dark:text-gray-400',
+    cardTitle: 'text-lg font-semibold text-gray-900 dark:text-white',
+    cardValue: 'text-3xl font-bold text-gray-900 dark:text-white',
+    label: 'text-sm font-medium text-gray-700 dark:text-gray-300',
+    body: 'text-sm text-gray-600 dark:text-gray-400',
+    caption: 'text-xs text-gray-500 dark:text-gray-500',
     statChange: 'text-sm font-medium',
+    // Client Config specific - properly theme-aware
+    sectionTitle: 'text-lg font-semibold text-gray-900 dark:text-white text-center',
+    sectionSubtitle: 'text-sm text-gray-600 dark:text-gray-400 text-center',
+    cardHeader: 'font-semibold text-gray-900 dark:text-white text-center',
+    cardDescription: 'text-xs text-gray-500 dark:text-gray-400 text-center',
   },
 
   // Line heights

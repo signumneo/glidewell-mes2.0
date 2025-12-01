@@ -2,14 +2,20 @@
  * Design System Constants
  * Reusable UI patterns, variants, and configurations
  * Keeps components consistent and maintainable
+ * 
+ * NOTE: For theme-aware buttons, import useThemeColors() hook
+ * and use theme.accentPrimary for dynamic color adaptation
  */
 
 export const buttonVariants = {
+  // Theme-aware primary button - uses blue gradient as fallback
+  // For dynamic theming, use: className={cn(useThemeColors().accentPrimary, ...)}
   primary: 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg hover:shadow-xl transition-all',
   secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-900',
   outline: 'border border-gray-300 hover:bg-gray-50',
   ghost: 'hover:bg-gray-100',
   danger: 'bg-red-600 hover:bg-red-700 text-white',
+  success: 'bg-green-500 hover:bg-green-600 text-white font-medium',
 } as const;
 
 export const cardVariants = {

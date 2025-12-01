@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { 
   Factory, 
   TrendingUp, 
@@ -10,38 +8,13 @@ import {
   Clock,
   CheckCircle
 } from 'lucide-react';
-import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
 import { ProductionOverview } from '@/components/dashboard/ProductionOverview';
-import { AuthService } from '@/lib/auth/auth';
-import { typography, themeColors } from '@/lib/theme';
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    // Protect the route
-    if (!AuthService.isAuthenticated()) {
-      router.push('/');
-    }
-  }, [router]);
-
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return null;
-  }
-
-  // Don't render if not authenticated
-  if (!AuthService.isAuthenticated()) {
-    return null;
-  }
-
   return (
-    <DashboardLayout>
-      <div className="space-y-8">
+    <div className="space-y-8">
         {/* Stats grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <StatCard
@@ -99,7 +72,6 @@ export default function DashboardPage() {
           <ProductionOverview />
           <RecentActivity />
         </div>
-      </div>
-    </DashboardLayout>
+    </div>
   );
 }

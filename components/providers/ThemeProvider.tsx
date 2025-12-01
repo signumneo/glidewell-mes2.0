@@ -33,7 +33,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       defaultTheme="light"
       themes={['light', 'dark', 'claude', 'forest', 'ocean', 'sunset']}
       enableSystem={false}
-      disableTransitionOnChange={false}
+      disableTransitionOnChange
+      storageKey="mes-theme"
     >
       <ThemeApplier>{children}</ThemeApplier>
     </NextThemesProvider>

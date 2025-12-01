@@ -13,9 +13,9 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-    // Redirect to dashboard if already authenticated
+    // Redirect to routers if already authenticated
     if (AuthService.isAuthenticated()) {
-      router.push('/dashboard');
+      router.push('/routers');
     }
   }, [router]);
 

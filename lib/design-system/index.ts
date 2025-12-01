@@ -5,3 +5,4 @@
 
 export * from './variants';
 export * from './depth';
+export { typography } from '../theme/typography';
