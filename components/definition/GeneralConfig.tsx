@@ -36,7 +36,7 @@ export function GeneralConfig({
 
   return (
     <div className={cn(
-      theme.surface,
+      theme.surfacePrimary,
       theme.border,
       cardVariants.elevated,
       'p-6'

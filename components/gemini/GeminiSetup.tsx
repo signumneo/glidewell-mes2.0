@@ -35,9 +35,9 @@ export function GeminiSetup({ onSubmit }: GeminiSetupProps) {
   };
 
   return (
-    <div className={cn('h-full flex items-center justify-center p-8', theme.background)}>
+    <div className={cn('h-full flex items-center justify-center p-8', theme.pageBackground)}>
       <div className={cn(
-        theme.surface,
+        theme.surfacePrimary,
         theme.border,
         cardVariants.elevated,
         'p-8 max-w-2xl w-full space-y-6'
@@ -50,7 +50,7 @@ export function GeminiSetup({ onSubmit }: GeminiSetupProps) {
               theme.accentPrimary,
               'bg-opacity-20'
             )}>
-              <Sparkles className={cn('w-8 h-8', theme.text)} />
+              <Sparkles className={cn('w-8 h-8', theme.textPrimary)} />
             </div>
           </div>
           <h1 className={cn(typography.styles.sectionTitle)}>
@@ -102,9 +102,9 @@ export function GeminiSetup({ onSubmit }: GeminiSetupProps) {
           'p-4 rounded-lg border',
           theme.border,
           'bg-opacity-50',
-          theme.surface
+          theme.surfacePrimary
         )}>
-          <h3 className={cn('text-sm font-semibold mb-2', theme.text)}>
+          <h3 className={cn('text-sm font-semibold mb-2', theme.textPrimary)}>
             Don't have an API key?
           </h3>
           <p className={cn('text-sm mb-3', theme.textSecondary)}>

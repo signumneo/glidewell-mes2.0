@@ -74,7 +74,7 @@ export function InventoryTable() {
           <select
             className={cn(
               'px-3 py-1 rounded-md border text-sm',
-              theme.input,
+              
               theme.border,
               'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
               transitions.default

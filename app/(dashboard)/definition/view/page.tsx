@@ -47,7 +47,7 @@ export default function DefinitionViewPage() {
 
       {/* Process List - Coming Soon */}
       <div className={cn(
-        theme.surface,
+        theme.surfacePrimary,
         theme.border,
         cardVariants.elevated,
         'p-16'

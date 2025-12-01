@@ -18,12 +18,12 @@ export function AddSubprocessForm() {
 
   return (
     <div className={cn(
-      theme.surface,
+      theme.surfacePrimary,
       theme.border,
       cardVariants.elevated,
       'p-6'
     )}>
-      <h3 className={cn('text-lg font-semibold mb-6 text-center', theme.text)}>
+      <h3 className={cn('text-lg font-semibold mb-6 text-center', theme.textPrimary)}>
         Add Subprocess
       </h3>
 

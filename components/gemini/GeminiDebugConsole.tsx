@@ -50,15 +50,15 @@ export function GeminiDebugConsole({ onClose }: GeminiDebugConsoleProps) {
   return (
     <div className={cn(
       'w-96 h-full p-6',
-      theme.surface,
+      theme.surfacePrimary,
       theme.border,
       'border-l'
     )}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Settings className={cn('w-5 h-5', theme.text)} />
-          <h3 className={cn('text-lg font-semibold', theme.text)}>
+          <Settings className={cn('w-5 h-5', theme.textPrimary)} />
+          <h3 className={cn('text-lg font-semibold', theme.textPrimary)}>
             Debug Console
           </h3>
         </div>
@@ -82,13 +82,13 @@ export function GeminiDebugConsole({ onClose }: GeminiDebugConsoleProps) {
             className={cn(
               'p-4 rounded-lg border',
               theme.border,
-              theme.surface
+              theme.surfacePrimary
             )}
           >
             <div className={cn('text-xs font-semibold mb-1', getLogColor(log.type))}>
               {log.type} {log.timestamp}
             </div>
-            <pre className={cn('text-xs font-mono whitespace-pre-wrap break-words', theme.text)}>
+            <pre className={cn('text-xs font-mono whitespace-pre-wrap break-words', theme.textPrimary)}>
               {JSON.stringify({ message: log.message }, null, 2)}
             </pre>
           </div>

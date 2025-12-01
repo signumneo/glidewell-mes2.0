@@ -40,15 +40,15 @@ export function GeminiSidebar({
   return (
     <div className={cn(
       'w-80 h-full p-6 space-y-6',
-      theme.surface,
+      theme.surfacePrimary,
       theme.border,
       'border-r'
     )}>
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <Code className={cn('w-5 h-5', theme.text)} />
-          <h2 className={cn('text-lg font-semibold', theme.text)}>
+          <Code className={cn('w-5 h-5', theme.textPrimary)} />
+          <h2 className={cn('text-lg font-semibold', theme.textPrimary)}>
             Gemini Analyst
           </h2>
         </div>
@@ -59,7 +59,7 @@ export function GeminiSidebar({
 
       {/* Max Tool Retries */}
       <div className="space-y-3">
-        <label className={cn('text-sm font-medium', theme.text)}>
+        <label className={cn('text-sm font-medium', theme.textPrimary)}>
           Max Tool Retries
         </label>
         <input
@@ -84,13 +84,13 @@ export function GeminiSidebar({
           onChange={(e) => onUseKnowledgeBaseChange(e.target.checked)}
           className={cn('w-4 h-4 rounded', transitions.default)}
         />
-        <label htmlFor="knowledge-base" className={cn('text-sm', theme.text)}>
+        <label htmlFor="knowledge-base" className={cn('text-sm', theme.textPrimary)}>
           Use Knowledge Base
         </label>
         <button
           className={cn(
             'ml-auto w-5 h-5 rounded-full flex items-center justify-center text-xs',
-            theme.surface,
+            theme.surfacePrimary,
             theme.border,
             'border'
           )}
@@ -106,7 +106,7 @@ export function GeminiSidebar({
           onClick={onToggleDebugConsole}
           className={cn(
             'w-full h-10 justify-start gap-2',
-            showDebugConsole ? theme.accentPrimary : theme.surface,
+            showDebugConsole ? theme.accentPrimary : theme.surfacePrimary,
             theme.accentHover,
             theme.border,
             'border',
@@ -121,7 +121,7 @@ export function GeminiSidebar({
         <Button
           className={cn(
             'w-full h-10 justify-start gap-2',
-            theme.surface,
+            theme.surfacePrimary,
             theme.accentHover,
             theme.border,
             'border',
@@ -136,7 +136,7 @@ export function GeminiSidebar({
         <Button
           className={cn(
             'w-full h-10 justify-start gap-2',
-            theme.surface,
+            theme.surfacePrimary,
             theme.accentHover,
             theme.border,
             'border',
@@ -151,7 +151,7 @@ export function GeminiSidebar({
         <Button
           className={cn(
             'w-full h-10 justify-start gap-2',
-            theme.surface,
+            theme.surfacePrimary,
             'hover:bg-orange-700/50',
             theme.border,
             'border border-orange-500/50',
@@ -166,7 +166,7 @@ export function GeminiSidebar({
         <Button
           className={cn(
             'w-full h-10 justify-start gap-2',
-            theme.surface,
+            theme.surfacePrimary,
             'hover:bg-red-700/50',
             theme.border,
             'border border-red-500/50',
@@ -184,12 +184,12 @@ export function GeminiSidebar({
       <div className={cn(
         'p-3 rounded-lg border',
         theme.border,
-        theme.surface,
+        theme.surfacePrimary,
         'bg-opacity-50'
       )}>
         <div className="flex items-center gap-2 mb-1">
           <Key className={cn('w-4 h-4', theme.textSecondary)} />
-          <span className={cn('text-xs font-medium', theme.text)}>API Key</span>
+          <span className={cn('text-xs font-medium', theme.textPrimary)}>API Key</span>
         </div>
         <p className={cn('text-xs font-mono', theme.textSecondary)}>
           {apiKey.substring(0, 12)}...

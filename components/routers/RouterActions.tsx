@@ -66,7 +66,7 @@ export function RouterActions({
       >
         <div className="space-y-4">
           {/* Bulk Upload Section */}
-          <div className={cn('p-4 rounded-lg border', theme.border, theme.surface)}>
+          <div className={cn('p-4 rounded-lg border', theme.border, theme.surfacePrimary)}>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
               Bulk Upload
             </h3>
@@ -80,7 +80,7 @@ export function RouterActions({
           </div>
 
           {/* Additional actions can be added here */}
-          <div className={cn('p-4 rounded-lg border', theme.border, theme.surface)}>
+          <div className={cn('p-4 rounded-lg border', theme.border, theme.surfacePrimary)}>
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
               Export Options
             </h3>

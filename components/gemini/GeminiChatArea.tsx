@@ -61,12 +61,12 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
       {/* Header */}
       <div className={cn(
         'p-4 border-b flex items-center justify-between',
-        theme.surface,
+        theme.surfacePrimary,
         theme.border
       )}>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-blue-500" />
-          <span className={cn('text-sm font-medium', theme.text)}>Chat</span>
+          <span className={cn('text-sm font-medium', theme.textPrimary)}>Chat</span>
         </div>
         <div className={cn('text-xs', theme.textSecondary)}>
           KB
@@ -74,7 +74,7 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
       </div>
 
       {/* Messages Area */}
-      <div className={cn('flex-1 overflow-y-auto p-6 space-y-4', theme.background)}>
+      <div className={cn('flex-1 overflow-y-auto p-6 space-y-4', theme.pageBackground)}>
         {messages.map((message) => (
           <div
             key={message.id}
@@ -96,13 +96,13 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
                 'max-w-2xl p-4 rounded-lg',
                 message.role === 'user'
                   ? cn(theme.accentPrimary, 'text-white')
-                  : cn(theme.surface, theme.border, 'border'),
+                  : cn(theme.surfacePrimary, theme.border, 'border'),
                 transitions.default
               )}
             >
               <p className={cn(
                 'text-sm',
-                message.role === 'user' ? 'text-white' : theme.text
+                message.role === 'user' ? 'text-white' : theme.textPrimary
               )}>
                 {message.content}
               </p>
@@ -112,12 +112,12 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
       </div>
 
       {/* Suggested Actions */}
-      <div className={cn('px-6 pb-4 flex gap-2', theme.background)}>
+      <div className={cn('px-6 pb-4 flex gap-2', theme.pageBackground)}>
         <button
           className={cn(
             'px-4 py-2 rounded-full text-xs border',
             theme.border,
-            theme.surface,
+            theme.surfacePrimary,
             theme.accentHover,
             transitions.default
           )}
@@ -128,7 +128,7 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
           className={cn(
             'px-4 py-2 rounded-full text-xs border',
             theme.border,
-            theme.surface,
+            theme.surfacePrimary,
             theme.accentHover,
             transitions.default
           )}
@@ -139,7 +139,7 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
           className={cn(
             'px-4 py-2 rounded-full text-xs border',
             theme.border,
-            theme.surface,
+            theme.surfacePrimary,
             theme.accentHover,
             transitions.default
           )}
@@ -149,12 +149,12 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
       </div>
 
       {/* Input Area */}
-      <div className={cn('p-6 border-t', theme.surface, theme.border)}>
+      <div className={cn('p-6 border-t', theme.surfacePrimary, theme.border)}>
         <div className="flex gap-3">
           <button
             className={cn(
               'p-3 rounded-lg',
-              theme.surface,
+              theme.surfacePrimary,
               theme.border,
               'border hover:bg-gray-700/50',
               transitions.default

@@ -29,7 +29,7 @@ export function OverviewHeader({ onRefresh, loading }: OverviewHeaderProps) {
         className={cn(
           'w-full max-w-md h-11 px-4 rounded-lg border text-sm',
           'text-gray-900 dark:text-white',
-          theme.input,
+          
           'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
           transitions.default
         )}

@@ -15,7 +15,7 @@ export function TrackingTable() {
   const theme = useThemeColors();
 
   return (
-    <div className={cn(theme.surface, theme.border, cardVariants.elevated, 'overflow-hidden')}>
+    <div className={cn(theme.surfacePrimary, theme.border, cardVariants.elevated, 'overflow-hidden')}>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">

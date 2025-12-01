@@ -338,9 +338,9 @@ export class AuthService {
     
     console.log('[Auth] Mapping access level:', { accessLevel, level, type: typeof level });
     
-    // 0 = admin, 1-3 = manager, 4-7 = operator, 8-10 = viewer
+    // 0 = admin, 1-3 = supervisor, 4-7 = operator, 8-10 = viewer
     if (level === 0) return 'admin';
-    if (level <= 3) return 'manager';
+    if (level <= 3) return 'supervisor';
     if (level <= 7) return 'operator';
     return 'viewer';
   }

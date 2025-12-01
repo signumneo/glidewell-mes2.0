@@ -73,7 +73,7 @@ export function ColumnSortingPreferences() {
                 className={cn(
                   'w-full h-11 px-4 pr-10 rounded-lg appearance-none cursor-pointer',
                   'border text-gray-900 dark:text-white',
-                  theme.input,
+                  
                   'focus:outline-none focus:ring-2 focus:ring-blue-500/50'
                 )}
               >
@@ -97,7 +97,7 @@ export function ColumnSortingPreferences() {
                 className={cn(
                   'w-full h-11 px-4 pr-10 rounded-lg appearance-none cursor-pointer',
                   'border text-gray-900 dark:text-white',
-                  theme.input,
+                  
                   'focus:outline-none focus:ring-2 focus:ring-blue-500/50'
                 )}
               >

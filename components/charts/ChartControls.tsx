@@ -52,7 +52,7 @@ export function ChartControls({ onRunQuery, onClear, loading }: ChartControlsPro
           className={cn(
             'w-full h-11 px-4 rounded-lg border text-sm',
             'text-gray-900 dark:text-white',
-            theme.input,
+            
             theme.border,
             'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
             transitions.default
@@ -77,7 +77,7 @@ export function ChartControls({ onRunQuery, onClear, loading }: ChartControlsPro
               className={cn(
                 'w-full h-10 px-3 rounded-lg border text-sm',
                 'text-gray-900 dark:text-white',
-                theme.input,
+                
                 theme.border,
                 'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
                 transitions.default
@@ -93,7 +93,7 @@ export function ChartControls({ onRunQuery, onClear, loading }: ChartControlsPro
               className={cn(
                 'w-full h-10 px-3 rounded-lg border text-sm',
                 'text-gray-900 dark:text-white',
-                theme.input,
+                
                 theme.border,
                 'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
                 transitions.default
@@ -114,7 +114,7 @@ export function ChartControls({ onRunQuery, onClear, loading }: ChartControlsPro
           className={cn(
             'w-full h-11 px-4 rounded-lg border text-sm',
             'text-gray-900 dark:text-white',
-            theme.input,
+            
             theme.border,
             'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
             transitions.default
@@ -140,7 +140,7 @@ export function ChartControls({ onRunQuery, onClear, loading }: ChartControlsPro
           className={cn(
             'w-full h-11 px-4 rounded-lg border text-sm',
             'text-gray-900 dark:text-white',
-            theme.input,
+            
             theme.border,
             'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
             transitions.default

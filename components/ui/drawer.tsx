@@ -51,7 +51,7 @@ export function Drawer({ open, onOpenChange, children, title, description }: Dra
       <div
         className={cn(
           'fixed right-0 top-0 bottom-0 z-[9999] w-full sm:w-[400px] md:w-[500px]',
-          theme.surface,
+          theme.surfacePrimary,
           theme.border,
           'border-l shadow-2xl',
           'animate-in slide-in-from-right duration-300'

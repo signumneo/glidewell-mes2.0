@@ -15,7 +15,7 @@ export function SubprocessConfig() {
     <div className="space-y-4">
       {/* Process Flow Dropdown */}
       <div className={cn(
-        theme.surface,
+        theme.surfacePrimary,
         theme.border,
         cardVariants.elevated,
         'p-4'
@@ -25,7 +25,7 @@ export function SubprocessConfig() {
           onChange={(e) => setProcessFlow(e.target.value)}
           className={cn(
             'w-full h-11 px-3 border rounded-md text-gray-900 dark:text-white',
-            theme.input,
+            
             'focus:ring-2',
             transitions.default
           )}

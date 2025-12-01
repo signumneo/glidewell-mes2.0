@@ -36,7 +36,7 @@ export function FormField({
         placeholder={placeholder || label}
         className={cn(
           'h-11 border text-gray-900 dark:text-white',
-          theme.input,
+          
           'focus:ring-2',
           transitions.default
         )}
@@ -72,7 +72,7 @@ export function SelectField({
         onChange={(e) => onChange(e.target.value)}
         className={cn(
           'w-full h-11 px-3 border rounded-md text-gray-900 dark:text-white',
-          theme.input,
+          
           'focus:ring-2',
           transitions.default
         )}

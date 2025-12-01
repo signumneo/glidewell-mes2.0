@@ -31,7 +31,7 @@ export function TrackingFilters() {
             onChange={(e) => setPartNumber(e.target.value)}
             className={cn(
               'w-full h-11 px-4 pr-10 border rounded-md text-gray-900 dark:text-white appearance-none',
-              theme.input,
+              
               'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
               transitions.default
             )}

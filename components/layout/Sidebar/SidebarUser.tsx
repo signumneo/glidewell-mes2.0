@@ -81,7 +81,7 @@ export function SidebarUser({ user, isCollapsed, isMobile, onLogout }: SidebarUs
                 className={cn(
                   'inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium',
                   user?.role === 'admin' && 'bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300',
-                  user?.role === 'manager' && 'bg-blue-100 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300',
+                  user?.role === 'supervisor' && 'bg-blue-100 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300',
                   user?.role === 'operator' && 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-300',
                   user?.role === 'viewer' && 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                 )}

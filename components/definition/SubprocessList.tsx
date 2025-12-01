@@ -11,13 +11,13 @@ export function SubprocessList() {
 
   return (
     <div className={cn(
-      theme.surface,
+      theme.surfacePrimary,
       theme.border,
       cardVariants.elevated,
       'p-6'
     )}>
       <div className="flex items-center justify-between mb-6">
-        <h3 className={cn('text-lg font-semibold', theme.text)}>
+        <h3 className={cn('text-lg font-semibold', theme.textPrimary)}>
           Subprocess List
         </h3>
         <div className="flex gap-2">
