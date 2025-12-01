@@ -60,12 +60,6 @@ export function LocationSettings() {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="e.g., Manufacturing Floor A"
-            className={cn(
-              'h-11 border text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500',
-              theme.input,
-              'focus:ring-2',
-              transitions.default
-            )}
           />
           <p className="text-xs text-gray-500 mt-2">
             Displayed in headers and reports
@@ -76,9 +70,8 @@ export function LocationSettings() {
           onClick={handleUpdate}
           disabled={!location.trim()}
           className={cn(
-            'w-full h-10',
-            saved ? buttonVariants.success : cn(theme.accentPrimary, theme.accentHover),
-            transitions.default
+            'w-full',
+            saved && buttonVariants.success
           )}
         >
           {saved ? (

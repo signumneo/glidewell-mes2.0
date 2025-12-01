@@ -68,12 +68,6 @@ export function IoTClientConfig() {
               value={clientId}
               onChange={(e) => setClientId(e.target.value)}
               placeholder="e.g., MES-CLIENT-001"
-              className={cn(
-                'h-11 border text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
             />
             {clientId && (
               <Button
@@ -81,9 +75,8 @@ export function IoTClientConfig() {
                 variant="outline"
                 size="icon"
                 className={cn(
-                  'h-11 w-11 border-gray-700/50',
-                  copied ? 'border-green-500/50 text-green-400' : 'text-gray-400',
-                  transitions.default
+                  'border-gray-700/50',
+                  copied ? 'border-green-500/50 text-green-400' : 'text-gray-400'
                 )}
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -99,9 +92,8 @@ export function IoTClientConfig() {
           onClick={handleUpdate}
           disabled={!clientId.trim()}
           className={cn(
-            'w-full h-10',
-            saved ? buttonVariants.success : cn(theme.accentPrimary, theme.accentHover),
-            transitions.default
+            'w-full',
+            saved && buttonVariants.success
           )}
         >
           {saved ? (

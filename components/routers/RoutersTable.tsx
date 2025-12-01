@@ -30,13 +30,13 @@ export function RoutersTable({
     partNumber: 200,
     routerId: 120,
     iteration: 100,
-    process: 220,
+    process: 240,
     quantity: 100,
     status: 120,
     priority: 140,
-    user: 140,
-    barcode: 100,
-    actions: 120,
+    user: 200,
+    description: 240,
+    actions: 100,
   });
 
   const [resizingColumn, setResizingColumn] = useState<string | null>(null);
@@ -46,13 +46,13 @@ export function RoutersTable({
   const columns = [
     { key: 'partNumber', label: 'Part Number', width: columnWidths.partNumber, sortable: true },
     { key: 'routerId', label: 'Router ID', width: columnWidths.routerId, sortable: true },
-    { key: 'iteration', label: 'Iter', width: columnWidths.iteration, sortable: true },
-    { key: 'process', label: 'Process Description', width: columnWidths.process, sortable: true },
+    { key: 'iteration', label: 'Version', width: columnWidths.iteration, sortable: true },
+    { key: 'process', label: 'Current Process', width: columnWidths.process, sortable: true },
     { key: 'quantity', label: 'Qty', width: columnWidths.quantity, sortable: true },
     { key: 'status', label: 'Status', width: columnWidths.status, sortable: true },
     { key: 'priority', label: 'Priority', width: columnWidths.priority, sortable: true },
-    { key: 'user', label: 'User', width: columnWidths.user, sortable: true },
-    { key: 'barcode', label: 'Barcode', width: columnWidths.barcode, sortable: false },
+    { key: 'user', label: 'User Email', width: columnWidths.user, sortable: true },
+    { key: 'description', label: 'Description', width: columnWidths.description, sortable: true },
     { key: 'actions', label: 'Actions', width: columnWidths.actions, sortable: false },
   ];
 

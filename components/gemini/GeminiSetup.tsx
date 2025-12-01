@@ -78,10 +78,7 @@ export function GeminiSetup({ onSubmit }: GeminiSetupProps) {
                 }}
                 placeholder="Enter your Gemini API key"
                 className={cn(
-                  'h-12 pl-10 border text-gray-900 dark:text-white',
-                  theme.input,
-                  'focus:ring-2',
-                  transitions.default,
+                  'pl-10',
                   error && 'border-red-500'
                 )}
               />
@@ -93,13 +90,7 @@ export function GeminiSetup({ onSubmit }: GeminiSetupProps) {
 
           <Button
             type="submit"
-            className={cn(
-              'w-full h-12',
-              theme.accentPrimary,
-              theme.accentHover,
-              transitions.default,
-              'flex items-center justify-center gap-2'
-            )}
+            className="w-full gap-2"
           >
             <Key className="w-4 h-4" />
             Connect API Key

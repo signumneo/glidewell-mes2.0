@@ -28,10 +28,22 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    console.log('[DashboardLayout] Component mounting');
     setIsMounted(true);
+
+    // Auth check - redirect if not authenticated
+    const isAuth = AuthService.isAuthenticated();
+    console.log('[DashboardLayout] Auth check result:', isAuth);
+    if (!isAuth) {
+      console.log('[DashboardLayout] Not authenticated, redirecting to login');
+      router.push('/');
+      return;
+    }
+    console.log('[DashboardLayout] Authenticated, loading layout');
 
     // Restore sidebar state from localStorage
     const savedCollapsedState = localStorage.getItem('sidebar-collapsed');
+    console.log('[DashboardLayout] Restored sidebar state:', savedCollapsedState);
     if (savedCollapsedState !== null) {
       setIsCollapsed(savedCollapsedState === 'true');
     }
@@ -46,7 +58,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [router]);
 
   // Persist sidebar state to localStorage
   const handleToggleCollapse = () => {
@@ -70,12 +82,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </div>
     );
-  }
-
-  // Auth check
-  if (!AuthService.isAuthenticated()) {
-    router.push('/');
-    return null;
   }
 
   return (

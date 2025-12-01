@@ -128,13 +128,7 @@ export function GeneralConfig({
           <Button
             onClick={onConfigureSubprocess}
             disabled={!canConfigureSubprocess}
-            className={cn(
-              'px-8 h-12',
-              theme.accentPrimary,
-              theme.accentHover,
-              'flex items-center gap-2',
-              !canConfigureSubprocess && 'opacity-50 cursor-not-allowed'
-            )}
+            className="gap-2"
             title={!canConfigureSubprocess ? 'Please enter a description to continue' : ''}
           >
             <Settings2 className="w-4 h-4" />

@@ -18,11 +18,28 @@ Manufacturing Execution System (MES) Dashboard - Next.js 16, TypeScript, Tailwin
 - **Glass morphism**: Prefer `backdrop-blur-xl` with subtle shadows
 - **Theme-aware components**: Use `useThemeColors()` hook for dynamic theme adaptation
 - **Typography**: Always use `typography.styles` from design system for consistent text styling
-- **Inputs/Selects**: Use `theme.input` for form fields to ensure theme adaptation
-- **Buttons**: Use `theme.accentPrimary` and `theme.accentHover` for dynamic theme colors
-- **Hover states**: ALWAYS use `theme.accentHover` for hover effects - NEVER hardcode `hover:bg-gray-*`
+- **Inputs/Selects**: 
+  - Use standard `<Input>` component without custom height overrides
+  - Default height is `h-11` (already in component)
+  - For search inputs with icons: use `pl-9` for left padding
+  - Icon positioning: `absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400`
+  - Never add custom `theme.input` classes - component handles this
+- **Buttons**: 
+  - Use standard `<Button>` component variants: `default`, `outline`, `ghost`, `destructive`
+  - Use standard sizes: `default`, `sm`, `lg`, `icon`
+  - Never override with `theme.accentPrimary` or `theme.accentHover` - let component handle styling
+  - Icon buttons: use `size="icon"` variant
+  - Button with text + icon: add `className="gap-2"`
+- **Hover states**: Component variants handle hover states - never override
 - **Subtle hovers**: Hover effects are intentionally light and subtle (10% opacity or less) for a refined UX
 - **Light mode compatibility**: NEVER use hardcoded dark backgrounds like `bg-gray-800/50` - always use `theme.surface`
+- **Backdrop/Overlay patterns**: For modals, drawers, or overlays with backdrop blur:
+  - Use `fixed inset-0` for backdrop positioning
+  - Add explicit `w-screen h-screen` classes
+  - Set very high z-index (e.g., `z-[9998]` for backdrop, `z-[9999]` for content)
+  - For side panels/drawers, use `top-0 bottom-0` instead of `h-screen` to prevent gaps
+  - Add inline `style={{ margin: 0, padding: 0 }}` to prevent spacing issues
+  - Example: `className="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm w-screen h-screen"`
 
 ### Example Styling
 ```typescript

@@ -34,21 +34,21 @@ const MES_CONFIGS = {
   },
   fmmmes: {
     unsdev: {
-      apiUrl: 'https://fmmmes-service.unsdev.glidewellengineering.com/api',
+      apiUrl: 'https://fmmmes-service.unsdev.glidewellengineering.com',
       cognitoClientId: '5o44pb3bp05kejsbd6lro327bl',
       azureClientId: '5b52f267-eedf-4cd6-820c-ccb45abc97e7',
       azureRedirectUri: 'https://fmmmes-v2.unsdev.glidewellengineering.com/technician',
       cognitoUsername: 'Eng-FmmMES-User',
     },
     unsqa: {
-      apiUrl: 'https://fmmmes-service.unsqa.glidewellengineering.com/api',
+      apiUrl: 'https://fmmmes-service.unsqa.glidewellengineering.com',
       cognitoClientId: '5ie43srcjgu9qijek0fic5ctis',
       azureClientId: '5b52f267-eedf-4cd6-820c-ccb45abc97e7',
       azureRedirectUri: 'https://fmmmes-v2.unsqa.glidewellengineering.com/technician',
       cognitoUsername: 'Eng-FmmMES-User',
     },
     unsprod: {
-      apiUrl: 'https://fmmmes-service.unsprod.glidewellengineering.com/api',
+      apiUrl: 'https://fmmmes-service.unsprod.glidewellengineering.com',
       cognitoClientId: '',
       azureClientId: '5b52f267-eedf-4cd6-820c-ccb45abc97e7',
       azureRedirectUri: 'https://fmmmes-v2.unsprod.glidewellengineering.com/technician',
@@ -144,11 +144,12 @@ export const appConfig = {
   auth: {
     // Azure AD SSO
     azure: {
-      enabled: false, // Disabled until redirect URI is registered in Azure portal
+      enabled: true,
+      tenantId: process.env.NEXT_PUBLIC_AZURE_TENANT_ID || 'c9340d0a-8762-4b43-a2d1-f59bd6ef8726',
       clientId: process.env.NEXT_PUBLIC_AZURE_CLIENT_ID || currentConfig.azureClientId,
-      authority: process.env.NEXT_PUBLIC_AZURE_AUTHORITY || 'https://login.microsoftonline.com/organizations',
+      authority: process.env.NEXT_PUBLIC_AZURE_AUTHORITY || 'https://login.microsoftonline.com/c9340d0a-8762-4b43-a2d1-f59bd6ef8726',
       redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URI || currentConfig.azureRedirectUri,
-      scopes: ['User.Read', 'openid', 'profile', 'email'],
+      scopes: ['openid', 'profile', 'email'],
     },
     
     // AWS Cognito (MES Backend Auth)

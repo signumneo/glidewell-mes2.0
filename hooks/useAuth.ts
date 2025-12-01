@@ -12,13 +12,17 @@ export function useAuth() {
 
   useEffect(() => {
     // Check if user is authenticated on mount
+    console.log('[useAuth] Checking authentication on mount');
     const currentUser = AuthService.getCurrentUser();
+    console.log('[useAuth] Current user:', currentUser ? { email: currentUser.email, role: currentUser.role } : null);
     setUser(currentUser);
     setLoading(false);
   }, []);
 
   const login = async (credentials: LoginCredentials, method: AuthMethod = 'basic') => {
+    console.log('[useAuth] Login attempt:', { username: credentials.username, method });
     const response = await AuthService.login(credentials, method);
+    console.log('[useAuth] Login response:', { success: response.success, hasUser: !!response.user });
     
     if (response.success && response.user) {
       setUser(response.user);
@@ -48,8 +52,10 @@ export function useAuth() {
   };
 
   const logout = async () => {
+    console.log('[useAuth] Logging out');
     await AuthService.logout();
     setUser(null);
+    console.log('[useAuth] User logged out, redirecting to login');
     router.push('/');
   };
 

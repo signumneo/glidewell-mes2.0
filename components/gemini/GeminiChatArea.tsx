@@ -167,23 +167,10 @@ export function GeminiChatArea({ apiKey, maxRetries, useKnowledgeBase }: GeminiC
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Ask me to analyze data, create charts, or upload files..."
-            className={cn(
-              'h-12 border text-gray-900 dark:text-white',
-              theme.input,
-              'focus:ring-2',
-              transitions.default
-            )}
           />
           <Button
             onClick={handleSend}
             disabled={!inputValue.trim()}
-            className={cn(
-              'h-12 px-6',
-              theme.accentPrimary,
-              theme.accentHover,
-              transitions.default,
-              !inputValue.trim() && 'opacity-50 cursor-not-allowed'
-            )}
           >
             <Send className="w-4 h-4" />
           </Button>

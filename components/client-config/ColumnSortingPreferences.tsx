@@ -74,8 +74,7 @@ export function ColumnSortingPreferences() {
                   'w-full h-11 px-4 pr-10 rounded-lg appearance-none cursor-pointer',
                   'border text-gray-900 dark:text-white',
                   theme.input,
-                  'focus:ring-2',
-                  transitions.default
+                  'focus:outline-none focus:ring-2 focus:ring-blue-500/50'
                 )}
               >
                 {SORT_COLUMNS.map((column) => (
@@ -99,8 +98,7 @@ export function ColumnSortingPreferences() {
                   'w-full h-11 px-4 pr-10 rounded-lg appearance-none cursor-pointer',
                   'border text-gray-900 dark:text-white',
                   theme.input,
-                  'focus:ring-2',
-                  transitions.default
+                  'focus:outline-none focus:ring-2 focus:ring-blue-500/50'
                 )}
               >
                 {SORT_ORDERS.map((order) => (
@@ -117,9 +115,8 @@ export function ColumnSortingPreferences() {
         <Button
           onClick={handleUpdate}
           className={cn(
-            'w-full h-10 max-w-xs mx-auto block',
-            saved ? buttonVariants.success : cn(theme.accentPrimary, theme.accentHover),
-            transitions.default
+            'w-full max-w-xs mx-auto block',
+            saved && buttonVariants.success
           )}
         >
           {saved ? (

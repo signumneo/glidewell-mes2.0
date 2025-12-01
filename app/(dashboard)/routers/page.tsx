@@ -12,6 +12,7 @@ import { useRouters } from '@/hooks/useRouters';
 export default function RoutersPage() {
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { routers, loading, error, filters, updateFilters, resetFilters } = useRouters();
 
@@ -46,20 +47,24 @@ export default function RoutersPage() {
 
   return (
     <div className="space-y-6">
-        {/* Actions Toolbar */}
-        <RouterActions
-          onAddNew={() => console.log('Add new router')}
-          onExport={() => console.log('Export routers')}
-          onBulkUpload={() => console.log('Bulk upload')}
-          onBulkDelete={() => console.log('Bulk delete')}
-        />
-
-        {/* Filters */}
+        {/* Filters with Actions */}
         <RouterFilters
           filters={filters}
           onFiltersChange={updateFilters}
           onReset={handleResetFilters}
           activeFiltersCount={activeFiltersCount}
+          onAddNew={() => console.log('Add new router')}
+          onOpenSettings={() => setDrawerOpen(true)}
+        />
+
+        {/* Settings Drawer */}
+        <RouterActions
+          onAddNew={() => console.log('Add new router')}
+          onExport={() => console.log('Export routers')}
+          onBulkUpload={() => console.log('Bulk upload')}
+          onBulkDelete={() => console.log('Bulk delete')}
+          drawerOpen={drawerOpen}
+          onDrawerChange={setDrawerOpen}
         />
 
         {/* Error Message */}

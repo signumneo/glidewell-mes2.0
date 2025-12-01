@@ -57,12 +57,6 @@ export function DefinitionHeader({
               value={partNumber}
               onChange={(e) => onPartNumberChange(e.target.value)}
               placeholder="Enter part number"
-              className={cn(
-                'h-11 border text-gray-900 dark:text-white',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
             />
           </div>
           <div className="flex-1 max-w-md">
@@ -73,12 +67,6 @@ export function DefinitionHeader({
               value={version}
               onChange={(e) => onVersionChange(e.target.value)}
               placeholder="Enter version"
-              className={cn(
-                'h-11 border text-gray-900 dark:text-white',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
             />
           </div>
         </div>
@@ -101,13 +89,7 @@ export function DefinitionHeader({
             />
             <Button
               onClick={() => document.getElementById('json-upload')?.click()}
-              className={cn(
-                'h-11 px-6',
-                theme.accentPrimary,
-                theme.accentHover,
-                transitions.default,
-                'flex items-center gap-2'
-              )}
+              className="gap-2"
             >
               <FileJson className="w-4 h-4" />
               Upload JSON

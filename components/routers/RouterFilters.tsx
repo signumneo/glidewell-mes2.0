@@ -6,7 +6,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, RotateCcw, Calendar, X } from 'lucide-react';
+import { Search, Filter, RotateCcw, Calendar, X, Plus, Settings2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -19,12 +19,19 @@ interface RouterFiltersProps {
   activeFiltersCount: number;
 }
 
+interface RouterFiltersExtendedProps extends RouterFiltersProps {
+  onAddNew?: () => void;
+  onOpenSettings?: () => void;
+}
+
 export function RouterFilters({
   filters,
   onFiltersChange,
   onReset,
   activeFiltersCount,
-}: RouterFiltersProps) {
+  onAddNew,
+  onOpenSettings,
+}: RouterFiltersExtendedProps) {
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   const statusOptions = ['All Status', 'Open', 'Closed', 'On Hold', 'Completed'];
@@ -34,9 +41,9 @@ export function RouterFilters({
   return (
     <div className="space-y-4">
       {/* Main Filter Bar */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Search */}
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Search - Reduced width */}
+        <div className="relative w-[240px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
             placeholder="Search routers..."
@@ -45,6 +52,18 @@ export function RouterFilters({
             className="pl-9"
           />
         </div>
+
+        {/* Add New Router */}
+        <Button onClick={onAddNew} className="gap-2">
+          <Plus className="w-4 h-4" />
+          Add New Router
+        </Button>
+
+        {/* Find Router */}
+        <Button variant="outline" className="gap-2">
+          <Search className="w-4 h-4" />
+          Find Router
+        </Button>
 
         {/* Advanced Filters Toggle */}
         <Button
@@ -68,6 +87,11 @@ export function RouterFilters({
             Reset
           </Button>
         )}
+
+        {/* Settings Icon */}
+        <Button variant="ghost" size="icon" onClick={onOpenSettings}>
+          <Settings2 className="w-4 h-4" />
+        </Button>
       </div>
 
       {/* Advanced Filters Panel */}

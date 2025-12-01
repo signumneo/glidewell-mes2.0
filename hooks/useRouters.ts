@@ -6,6 +6,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { RouterService } from '@/lib/services/router.service';
+import { RouterData } from '@/types/mes';
 
 export interface RouterFilters {
   search?: string;
@@ -17,17 +19,20 @@ export interface RouterFilters {
   sortDirection?: 'asc' | 'desc';
 }
 
+// Map RouterData from API to UI-friendly Router interface
 export interface Router {
   id: string;
   partNumber: string;
   routerId: string;
+  version: string;
   iteration: number;
   process: string;
+  processDescription: string;
   quantity: number;
   status: string;
   priority: string;
   user: string;
-  barcode: string;
+  description: string;
   [key: string]: any;
 }
 
@@ -37,20 +42,91 @@ export function useRouters() {
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<RouterFilters>({});
 
+  /**
+   * Map RouterData from MES API to UI Router format
+   */
+  const mapRouterData = (data: RouterData): Router => {
+    // Extract process description from dynamic process field
+    const currentProcess = data.CurrentProcess;
+    const processField = data[currentProcess];
+    const processDescription = processField?.Description || '';
+
+    return {
+      id: `${data.PartNumber}-${data.RouterId}`,
+      partNumber: data.PartNumber,
+      routerId: data.RouterId,
+      version: data.Version,
+      iteration: parseInt(data.Version) || 1,
+      process: currentProcess,
+      processDescription,
+      quantity: parseInt(data.Quantity) || 0,
+      status: data.Status,
+      priority: data.PriorityLevel || 'Normal',
+      user: data.Useremail,
+      description: data.Description,
+    };
+  };
+
   const fetchRouters = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // TODO: Replace with actual API endpoint
-      // import { RouterService } from '@/lib/services/router.service';
-      // const response = await RouterService.getRouters();
-      // setRouters(response.data);
+      // Build filters for API call
+      const scanFilters: any = {};
+      if (filters.partNumber) {
+        scanFilters.PartNumber = filters.partNumber;
+      }
+      if (filters.search) {
+        // CurrentProcess filter (process ID like "1000", "2000")
+        scanFilters.CurrentProcess = filters.search;
+      }
 
-      // Temporary: Set empty array until API is implemented
+      console.log('[useRouters] Fetching with filters:', scanFilters);
+
+      // Call IoT Scan API
+      const response = await RouterService.scanRouters(
+        Object.keys(scanFilters).length > 0 ? scanFilters : undefined
+      );
+
+      // Map API data to UI format
+      const mappedRouters = response.data.map(mapRouterData);
+
+      // Apply client-side filtering
+      let filteredRouters = mappedRouters;
+
+      if (filters.status) {
+        filteredRouters = filteredRouters.filter(
+          (r) => r.status.toLowerCase() === filters.status?.toLowerCase()
+        );
+      }
+
+      if (filters.priority) {
+        filteredRouters = filteredRouters.filter(
+          (r) => r.priority.toLowerCase() === filters.priority?.toLowerCase()
+        );
+      }
+
+      // Apply sorting
+      if (filters.sortBy && filters.sortDirection) {
+        filteredRouters.sort((a, b) => {
+          const aVal = a[filters.sortBy!];
+          const bVal = b[filters.sortBy!];
+          const direction = filters.sortDirection === 'asc' ? 1 : -1;
+
+          if (typeof aVal === 'string' && typeof bVal === 'string') {
+            return aVal.localeCompare(bVal) * direction;
+          }
+          return (aVal - bVal) * direction;
+        });
+      }
+
+      setRouters(filteredRouters);
+      console.log('[useRouters] Loaded routers:', filteredRouters.length);
+    } catch (err: any) {
+      console.error('[useRouters] Error:', err);
+      setError(err.message || 'Failed to load routers');
       setRouters([]);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }

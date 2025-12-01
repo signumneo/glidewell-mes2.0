@@ -101,7 +101,10 @@ export function Sidebar({
         )}
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto scrollbar-thin">
+        <nav className={cn(
+          "flex-1 px-3 py-4 space-y-1",
+          (isCollapsed && !isMobile) ? "overflow-hidden" : "overflow-y-auto"
+        )}>
           <SidebarNavItem
             icon={Route}
             label="Routers"

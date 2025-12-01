@@ -42,10 +42,11 @@ class ApiClient {
 
   /**
    * Get authorization token from storage
+   * Uses AccessToken for MES API authentication (per Confluence docs)
    */
   private getAuthToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('auth_token');
+    return localStorage.getItem('AccessToken');
   }
 
   /**
@@ -75,7 +76,7 @@ class ApiClient {
     };
 
     // Log error for debugging
-    console.error('API Error:', apiError);
+    console.error('[API] Error:', apiError);
 
     throw apiError;
   }
@@ -92,15 +93,21 @@ class ApiClient {
     try {
       const url = this.buildURL(endpoint, params);
       const token = this.getAuthToken();
+      console.log('[API] 📤 Request:', method, endpoint, { 
+        hasToken: !!token, 
+        tokenPrefix: token ? token.substring(0, 20) + '...' : 'none',
+        params,
+        bodySize: body ? JSON.stringify(body).length : 0 
+      });
 
       const requestHeaders: Record<string, string> = {
         ...this.defaultHeaders,
         ...headers,
       } as Record<string, string>;
 
-      // Add auth token if available
+      // Add auth token if available (MES API expects token without Bearer prefix)
       if (token) {
-        requestHeaders['Authorization'] = `Bearer ${token}`;
+        requestHeaders['Authorization'] = token;
       }
 
       const requestOptions: RequestInit = {
@@ -114,9 +121,15 @@ class ApiClient {
       }
 
       const response = await fetch(url, requestOptions);
+      console.log('[API] 📥 Response:', method, endpoint, { 
+        status: response.status, 
+        ok: response.ok,
+        statusText: response.statusText
+      });
 
       // Parse response
       const data = await response.json();
+      console.log('[API] 📋 Response Data:', JSON.stringify(data, null, 2).substring(0, 500) + '...');
 
       if (!response.ok) {
         throw {
@@ -133,6 +146,7 @@ class ApiClient {
         message: data.message,
       };
     } catch (error: any) {
+      console.error('[API] ❌ Error:', method, endpoint, error);
       this.handleError(error);
     }
   }
@@ -158,6 +172,14 @@ class ApiClient {
 
   async delete<T = any>(endpoint: string): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, { method: 'DELETE' });
+  }
+
+  /**
+   * Post MES message format (for IoT/API commands)
+   * Handles MES-specific message structure with Header/Data
+   */
+  async postMESMessage<T = any>(endpoint: string, mesMessage: any): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, { method: 'POST', body: mesMessage });
   }
 }
 

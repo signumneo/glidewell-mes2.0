@@ -37,12 +37,6 @@ export function AddSubprocessForm() {
             value={processId}
             onChange={(e) => setProcessId(e.target.value)}
             placeholder="4000"
-            className={cn(
-              'h-11 border text-gray-900 dark:text-white',
-              theme.input,
-              'focus:ring-2',
-              transitions.default
-            )}
           />
         </div>
 
@@ -55,12 +49,6 @@ export function AddSubprocessForm() {
             value={processDescription}
             onChange={(e) => setProcessDescription(e.target.value)}
             placeholder="Process Description"
-            className={cn(
-              'h-11 border text-gray-900 dark:text-white',
-              theme.input,
-              'focus:ring-2',
-              transitions.default
-            )}
           />
         </div>
 
@@ -74,12 +62,6 @@ export function AddSubprocessForm() {
               value={operatorId}
               onChange={(e) => setOperatorId(e.target.value)}
               placeholder="000000"
-              className={cn(
-                'h-11 border text-gray-900 dark:text-white',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
             />
           </div>
           <div>
@@ -90,51 +72,21 @@ export function AddSubprocessForm() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className={cn(
-                'h-11 border text-gray-900 dark:text-white',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
             />
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="grid grid-cols-3 gap-3 pt-4">
-          <Button
-            className={cn(
-              'h-12',
-              theme.accentPrimary,
-              theme.accentHover,
-              transitions.default,
-              'flex items-center gap-2'
-            )}
-          >
+          <Button className="gap-2">
             <Plus className="w-4 h-4" />
             Add Item
           </Button>
-          <Button
-            className={cn(
-              'h-12',
-              theme.accentPrimary,
-              theme.accentHover,
-              transitions.default,
-              'flex items-center gap-2'
-            )}
-          >
+          <Button className="gap-2">
             <Play className="w-4 h-4" />
             Add Actions
           </Button>
-          <Button
-            className={cn(
-              'h-12',
-              theme.accentPrimary,
-              theme.accentHover,
-              transitions.default,
-              'flex items-center gap-2'
-            )}
-          >
+          <Button className="gap-2">
             <GitBranch className="w-4 h-4" />
             Add Conditions
           </Button>
@@ -142,18 +94,7 @@ export function AddSubprocessForm() {
 
         {/* Create Subprocess Button */}
         <div className="pt-4">
-          <Button
-            className={cn(
-              'w-full h-12',
-              theme.surface,
-              theme.border,
-              theme.textSecondary,
-              theme.accentHover,
-              transitions.default,
-              'flex items-center justify-center gap-2'
-            )}
-            variant="outline"
-          >
+          <Button variant="outline" className="w-full gap-2">
             <List className="w-4 h-4" />
             Create Subprocess
           </Button>

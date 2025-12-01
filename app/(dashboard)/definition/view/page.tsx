@@ -25,50 +25,24 @@ export default function DefinitionViewPage() {
   return (
     <div className="space-y-6">
       {/* Search Bar */}
-      <div className={cn(
-        theme.surface,
-        theme.border,
-        cardVariants.elevated,
-        'p-6'
-      )}>
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1">
-            <Search className={cn(
-              'absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5',
-              theme.textSecondary
-            )} />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter by Part Number or Description..."
-              className={cn(
-                'h-12 pl-10 border text-gray-900 dark:text-white',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleSearch();
-                }
-              }}
-            />
-          </div>
-          <Button
-            onClick={handleRefresh}
-            className={cn(
-              'h-12 px-4',
-              theme.surface,
-              theme.border,
-              'border',
-              theme.accentHover,
-              transitions.default
-            )}
-            variant="outline"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </Button>
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Filter by Part Number or Description..."
+            className="pl-9"
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
+          />
         </div>
+        <Button variant="outline" size="icon" onClick={handleRefresh}>
+          <RotateCcw className="w-4 h-4" />
+        </Button>
       </div>
 
       {/* Process List - Coming Soon */}

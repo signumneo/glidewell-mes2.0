@@ -9,7 +9,7 @@ import { msalConfig, loginRequest } from './msal-config';
  * Handles all authentication methods: Azure SSO, Cognito, Basic Auth
  */
 export class AuthService {
-  private static readonly TOKEN_KEY = 'mes_auth_token';
+  private static readonly TOKEN_KEY = 'IdToken'; // Single token key
   private static readonly USER_KEY = 'mes_user';
   private static readonly AUTH_METHOD_KEY = 'mes_auth_method';
   private static msalInstance: PublicClientApplication | null = null;
@@ -31,13 +31,16 @@ export class AuthService {
    */
   static async handleRedirectResponse(): Promise<AuthResponse | null> {
     try {
+      console.log('[Auth] Handling redirect response...');
       const msalInstance = await this.getMsalInstance();
       const response = await msalInstance.handleRedirectPromise();
       
       if (response) {
+        console.log('[Auth] Azure redirect response received:', { username: response.account?.username });
         // User just logged in via redirect
         return this.handleAzureLoginSuccess(response);
       }
+      console.log('[Auth] No redirect response found');
       
       // No redirect response, check if user is already logged in
       const accounts = msalInstance.getAllAccounts();
@@ -69,10 +72,12 @@ export class AuthService {
    */
   static async loginWithAzure(): Promise<AuthResponse> {
     try {
+      console.log('[Auth] Starting Azure SSO login...');
       const msalInstance = await this.getMsalInstance();
       
       // Try silent login first
       const accounts = msalInstance.getAllAccounts();
+      console.log('[Auth] Found', accounts.length, 'existing Azure accounts');
       if (accounts.length > 0) {
         try {
           const response = await msalInstance.acquireTokenSilent({
@@ -107,31 +112,94 @@ export class AuthService {
    * Handle successful Azure login
    */
   private static handleAzureLoginSuccess(response: AuthenticationResult): AuthResponse {
+    console.log('[Auth] Processing Azure SSO login success');
     const account = response.account;
+    const idToken = response.idToken;
+    const accessToken = response.accessToken;
+    
+    console.log('[Auth] Azure account:', { 
+      username: account.username, 
+      name: account.name,
+      localAccountId: account.localAccountId 
+    });
+
+    // Parse ID token to extract custom claims (employeeId, roles, etc.)
+    let employeeId: string | undefined;
+    let accessLevel: string | undefined;
+    
+    if (idToken) {
+      try {
+        const payload = this.parseJwt(idToken);
+        console.log('[Auth] ID Token claims:', payload);
+        
+        employeeId = payload.employeeId || payload.employee_id;
+        accessLevel = payload.roles?.[0] || payload.role;
+      } catch (error) {
+        console.warn('[Auth] Failed to parse ID token:', error);
+      }
+    }
+    
+    // Map access level to role
+    const role = accessLevel ? this.mapAccessLevelToRole(accessLevel) : 'operator';
+    console.log('[Auth] Role mapped:', accessLevel, '→', role);
     
     const user: User = {
       id: account.localAccountId,
       username: account.username,
       email: account.username,
       name: account.name || account.username,
-      role: 'operator', // Default role, should be determined by your backend
+      role,
       authMethod: 'azure',
     };
 
-    const token = response.accessToken;
-
-    // Store in sessionStorage
+    // Store in localStorage (SSO uses localStorage for persistence)
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem(this.TOKEN_KEY, token);
-      sessionStorage.setItem(this.USER_KEY, JSON.stringify(user));
-      sessionStorage.setItem(this.AUTH_METHOD_KEY, 'azure');
+      // Store both tokens - IdToken for identity, AccessToken for API calls
+      localStorage.setItem(this.TOKEN_KEY, idToken);
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+      localStorage.setItem(this.AUTH_METHOD_KEY, 'azure');
+      
+      // Store AccessToken for MES API authentication (required)
+      if (accessToken) {
+        localStorage.setItem('AccessToken', accessToken);
+        console.log('[Auth] Stored AccessToken for MES API calls');
+      }
+      
+      // Store MES-specific data
+      if (employeeId) {
+        localStorage.setItem('techId', employeeId);
+        console.log('[Auth] Stored techId from Azure:', employeeId);
+      }
+      if (accessLevel) {
+        localStorage.setItem('accessLevel', String(accessLevel));
+      }
+      
+      console.log('[Auth] Azure SSO user stored:', { 
+        email: user.email, 
+        role: user.role,
+        techId: employeeId 
+      });
     }
 
     return {
       success: true,
       user,
-      token,
+      token: idToken, // Use IdToken as primary auth token
     };
+  }
+
+  /**
+   * Parse JWT token to extract payload
+   */
+  private static parseJwt(token: string): any {
+    try {
+      const base64 = token.split('.')[1];
+      const decoded = atob(base64.replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(decoded);
+    } catch (e) {
+      console.error('[Auth] JWT parse error:', e);
+      return {};
+    }
   }
 
   /**
@@ -142,6 +210,7 @@ export class AuthService {
    */
   static async loginWithMESBackend(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
+      console.log('[Auth] Attempting MES Backend login for:', credentials.username);
       // Use Next.js API route to handle two-step authentication
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -155,7 +224,15 @@ export class AuthService {
       });
 
       const data = await response.json();
-      console.log('Login response:', { status: response.status, data: { ...data, token: data.token ? '***' : undefined } });
+      console.log('[Auth] MES Backend response:', { 
+        status: response.status, 
+        hasToken: !!data.token,
+        hasIdToken: !!data.idToken,
+        hasRefreshToken: !!data.refreshToken,
+        userEmail: data.useremail,
+        accessLevel: data.accesslevel,
+        error: data.error 
+      });
 
       if (!response.ok) {
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -163,6 +240,7 @@ export class AuthService {
 
       // Check for error in response
       if (data.error || !data.useremail) {
+        console.log('[Auth] Login failed:', data.error || 'No user email in response');
         return {
           success: false,
           message: data.error || 'Invalid credentials',
@@ -171,24 +249,56 @@ export class AuthService {
 
       // Map accesslevel to role
       const role = this.mapAccessLevelToRole(data.accesslevel);
+      console.log('[Auth] Access level mapped:', data.accesslevel, '→', role);
+
+      // Format name from email: remove dots and capitalize
+      const rawName = data.useremail.split('@')[0];
+      const formattedName = rawName
+        .split('.')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
 
       const user: User = {
         id: data.useremail,
         username: data.useremail,
         email: data.useremail,
-        name: data.useremail.split('@')[0],
+        name: formattedName,
         role,
         authMethod: 'basic',
       };
 
-      // Use Cognito token from backend
-      const token = data.token || btoa(`${credentials.username}:${Date.now()}`);
+      console.log('[Auth] Created user object:', user);
+
+      // Store Cognito tokens - IdToken for identity, AccessToken for MES API
+      const token = data.token; // This is IdToken from backend
 
       // Store in localStorage
       if (typeof window !== 'undefined') {
+        // Primary auth token (IdToken for identity)
         localStorage.setItem(this.TOKEN_KEY, token);
         localStorage.setItem(this.USER_KEY, JSON.stringify(user));
         localStorage.setItem(this.AUTH_METHOD_KEY, 'basic');
+        
+        // Store AccessToken for MES API calls (REQUIRED per Confluence docs)
+        if (data.accessToken) {
+          localStorage.setItem('AccessToken', data.accessToken);
+          console.log('[Auth] Stored AccessToken for MES API calls');
+        } else {
+          console.warn('[Auth] No AccessToken received - MES API calls may fail');
+        }
+        if (data.refreshToken) {
+          localStorage.setItem('RefreshToken', data.refreshToken);
+          console.log('[Auth] Stored RefreshToken');
+        }
+        
+        // Store MES-specific data
+        if (data.techId) {
+          localStorage.setItem('techId', data.techId);
+          console.log('[Auth] Stored techId:', data.techId);
+        }
+        if (data.accesslevel) {
+          localStorage.setItem('accessLevel', String(data.accesslevel));
+        }
       }
 
       return {
@@ -221,13 +331,17 @@ export class AuthService {
 
   /**
    * Map access level from API to user role
+   * MES access levels: 0-10 where 0 = admin (highest), 10 = viewer (lowest)
    */
   private static mapAccessLevelToRole(accessLevel: string): User['role'] {
     const level = parseInt(accessLevel, 10);
     
-    if (level >= 90) return 'admin';
-    if (level >= 50) return 'manager';
-    if (level >= 20) return 'operator';
+    console.log('[Auth] Mapping access level:', { accessLevel, level, type: typeof level });
+    
+    // 0 = admin, 1-3 = manager, 4-7 = operator, 8-10 = viewer
+    if (level === 0) return 'admin';
+    if (level <= 3) return 'manager';
+    if (level <= 7) return 'operator';
     return 'viewer';
   }
 
@@ -291,15 +405,26 @@ export class AuthService {
    */
   static async logout(): Promise<void> {
     const authMethod = this.getAuthMethod();
+    console.log('[Auth] Logging out, method:', authMethod);
 
     // Clear storage
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(this.TOKEN_KEY);
+      // Clear auth tokens
+      localStorage.removeItem(this.TOKEN_KEY); // IdToken
       localStorage.removeItem(this.USER_KEY);
       localStorage.removeItem(this.AUTH_METHOD_KEY);
-      sessionStorage.removeItem(this.TOKEN_KEY);
-      sessionStorage.removeItem(this.USER_KEY);
-      sessionStorage.removeItem(this.AUTH_METHOD_KEY);
+      
+      // Clear MES-specific data
+      localStorage.removeItem('AccessToken');
+      localStorage.removeItem('RefreshToken');
+      localStorage.removeItem('techId');
+      localStorage.removeItem('accessLevel');
+      localStorage.removeItem('userName');
+      
+      // Legacy cleanup
+      localStorage.removeItem('mes_auth_token');
+      
+      console.log('[Auth] Storage cleared');
     }
 
     // Azure SSO logout
@@ -353,7 +478,9 @@ export class AuthService {
    */
   static isAuthenticated(): boolean {
     if (typeof window === 'undefined') return false;
-    return !!(sessionStorage.getItem(this.TOKEN_KEY) || localStorage.getItem(this.TOKEN_KEY));
+    const isAuth = !!(sessionStorage.getItem(this.TOKEN_KEY) || localStorage.getItem(this.TOKEN_KEY));
+    console.log('[Auth] Authentication check:', isAuth);
+    return isAuth;
   }
 
   /**

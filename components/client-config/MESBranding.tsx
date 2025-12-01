@@ -78,12 +78,6 @@ export function MESBranding() {
               value={appTitle}
               onChange={(e) => setAppTitle(e.target.value)}
               placeholder="Enter application title"
-              className={cn(
-                'h-11 border text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
             />
           </div>
 
@@ -97,12 +91,6 @@ export function MESBranding() {
               value={logoSvg}
               onChange={(e) => setLogoSvg(e.target.value)}
               placeholder="SVG code or image URL"
-              className={cn(
-                'h-11 border text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500',
-                theme.input,
-                'focus:ring-2',
-                transitions.default
-              )}
             />
           </div>
         </div>
@@ -137,9 +125,8 @@ export function MESBranding() {
           <Button
             onClick={handleUpdateBranding}
             className={cn(
-              'flex-1 h-10',
-              saved ? buttonVariants.success : cn(theme.accentPrimary, theme.accentHover),
-              transitions.default
+              'flex-1',
+              saved && buttonVariants.success
             )}
           >
             {saved ? (

@@ -30,7 +30,6 @@ export function OverviewHeader({ onRefresh, loading }: OverviewHeaderProps) {
           'w-full max-w-md h-11 px-4 rounded-lg border text-sm',
           'text-gray-900 dark:text-white',
           theme.input,
-          theme.border,
           'focus:outline-none focus:ring-2 focus:ring-blue-500/50',
           transitions.default
         )}
@@ -44,12 +43,7 @@ export function OverviewHeader({ onRefresh, loading }: OverviewHeaderProps) {
         disabled={loading}
         variant="outline"
         size="sm"
-        className={cn(
-          'gap-2 flex-shrink-0',
-          theme.border,
-          theme.hoverBackground,
-          transitions.default
-        )}
+        className="gap-2"
       >
         <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
         Refresh
